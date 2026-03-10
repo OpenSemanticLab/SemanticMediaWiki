@@ -99,6 +99,13 @@ class QueryResultSerializer implements DispatchableSerializer {
 							'item'   => []
 						];
 
+						// Handle SMWDIError, see https://github.com/SemanticMediaWiki/SemanticMediaWiki/issues/5713
+						$dataItem = $recordValue->getDataItem();
+						if ( $dataItem instanceof \SMWDIError ) {
+								$recordDiValues[$label]['item'][] = self::getSerialization( $dataItem );
+								continue;
+						}
+
 						foreach ( $recordValue->getDataItem()->getSemanticData()->getPropertyValues( $property ) as $value ) {
 
 							if ( $property->findPropertyTypeID() === '_qty' ) {
